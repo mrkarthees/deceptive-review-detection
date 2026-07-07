@@ -1,16 +1,47 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-const reviewSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
-  review: {
-    type: String,
-  },
-  productId: {
-    type: String,
-    required: true,
-  },
-})
+const reviewSchema = new mongoose.Schema(
+	{
+		userId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User',
+			required: true,
+		},
 
-export const Review = mongoose.model('Review', reviewSchema)
+		productId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Product',
+			required: true,
+		},
+		userName: {
+			type: String,
+			required: true,
+		},
+
+		userEmail: {
+			type: String,
+			required: true,
+		},
+
+		review: {
+			type: String,
+			required: true,
+		},
+
+		status: {
+			type: String,
+			enum: ['approved', 'pending', 'warning', 'rejected'],
+			default: 'pending',
+		},
+
+		active: {
+			type: Boolean,
+			default: true,
+		},
+	},
+	{
+		timestamps: true,
+	},
+);
+
+export const Review = mongoose.model('Review', reviewSchema);

@@ -1,30 +1,349 @@
 .container .review {
-  grid-row: 2;
-  grid-column: 2;
-}
-.grid .review {
-  grid-row: 2;
-  grid-column: 1/3;
+	grid-row: 2;
+	grid-column: 2;
 }
 
-.review-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+.grid .review {
+	grid-row: 2;
+	grid-column: 1/3;
 }
-.review-container h1 {
-  text-align: center;
-  font-size: 2rem;
+
+.review {
+	width: 100%;
+	padding: 1.5rem 2rem;
+	box-sizing: border-box;
 }
-.review-container .reviews {
-  padding: 1rem;
-  margin: 1rem;
-  border-radius: 1rem;
-  background-color: var(--accent-100);
+
+.review-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-bottom: 1.5rem;
 }
-@media screen and (max-width: 720px) {
-  .container .review {
-    grid-row: 2;
-    grid-column: 1/3;
-  }
+
+.review-head h1 {
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-size: 1.3rem;
+}
+
+.review-count {
+	font-size: 0.85rem;
+	color: var(--accent-500);
+	font-weight: 600;
+}
+
+.review-table {
+	width: 100%;
+	background-color: #ffffff;
+	border: 1px solid var(--accent-100);
+	border-radius: 14px;
+	overflow: visible;
+}
+
+.review-row {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	grid-template-columns: 1.3fr 1.4fr 2.2fr 170px 90px 1.1fr;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.9rem 1.25rem;
+	border-bottom: 1px solid var(--accent-100);
+}
+
+.review-row:has(.status-dropdown-menu.open) {
+	z-index: 50;
+}
+
+.review-body .review-row:last-child {
+	border-bottom: none;
+	border-bottom-left-radius: 14px;
+	border-bottom-right-radius: 14px;
+}
+
+.review-row-head {
+	background-color: var(--bg);
+	text-transform: uppercase;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+	color: var(--accent-500);
+	padding: 0.9rem 1.25rem;
+	border-top-left-radius: 14px;
+	border-top-right-radius: 14px;
+}
+
+.row-name {
+	font-weight: 500;
+	font-size: 0.95rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-transform: capitalize;
+}
+
+.row-email {
+	font-size: 0.75rem;
+	color: var(--accent-500);
+}
+
+.col-review {
+	font-size: 0.85rem;
+	color: #444;
+	line-height: 1.4;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	cursor: default;
+}
+
+.col-date {
+	font-size: 0.8rem;
+	color: var(--accent-500);
+}
+
+.active,
+.inactive {
+	justify-self: start;
+	padding: 0.3rem 0.7rem;
+	border-radius: 1rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	color: #fff;
+	white-space: nowrap;
+}
+
+.inactive {
+	background-color: var(--accent);
+}
+
+.empty-state {
+	text-align: center;
+	color: var(--accent-500);
+	padding: 2.5rem 0;
+	font-size: 0.95rem;
+}
+
+/* Loading state */
+.review-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.8rem;
+	padding: 3rem 0;
+	color: var(--accent-500);
+	font-size: 0.9rem;
+}
+
+.spinner {
+	width: 14px;
+	height: 14px;
+	border: 2px solid rgba(255, 255, 255, 0.5);
+	border-top-color: #fff;
+	border-radius: 50%;
+	animation: spin 0.6s linear infinite;
+}
+
+.spinner.large {
+	width: 28px;
+	height: 28px;
+	border: 3px solid var(--accent-100);
+	border-top-color: var(--accent);
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Apple-style status dropdown */
+.status-dropdown {
+	position: relative;
+	width: 150px;
+}
+
+.status-dropdown-trigger {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.4rem 0.8rem;
+	border-radius: 20px;
+	border: none;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: #fff;
+	cursor: pointer;
+	transition:
+		transform 0.15s ease,
+		filter 0.15s ease;
+}
+
+.status-dropdown-trigger:hover {
+	filter: brightness(1.05);
+}
+
+.status-dropdown-trigger:active {
+	transform: scale(0.96);
+}
+
+.status-dropdown-trigger.loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: not-allowed;
+	opacity: 0.85;
+}
+
+.status-dropdown-trigger.approved {
+	background-color: #22c55e;
+}
+
+.status-dropdown-trigger.warning {
+	background-color: #f59e0b;
+}
+
+.status-dropdown-trigger.rejected {
+	background-color: #ef4444;
+}
+
+.chevron {
+	display: inline-block;
+	transform: rotate(90deg);
+	transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	font-size: 0.9rem;
+	line-height: 1;
+}
+
+.chevron.open {
+	transform: rotate(-90deg);
+}
+
+.status-dropdown-menu {
+	position: absolute;
+	top: calc(100% + 8px);
+	left: 0;
+	width: 200px;
+	background: rgba(255, 255, 255, 0.92);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border-radius: 14px;
+	box-shadow:
+		0 12px 30px rgba(0, 0, 0, 0.15),
+		0 0 0 1px rgba(0, 0, 0, 0.04);
+	padding: 0.5rem;
+	opacity: 0;
+	transform: scale(0.9) translateY(-6px);
+	transform-origin: top left;
+	pointer-events: none;
+	transition:
+		opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+		transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+	z-index: 20;
+}
+
+.status-dropdown-menu.open {
+	opacity: 1;
+	width: 150px;
+	transform: scale(1) translateY(0);
+	pointer-events: auto;
+}
+
+/* Flip menu upward when there isn't room below (JS adds .open-up) */
+.status-dropdown.open-up .status-dropdown-menu {
+	top: auto;
+	bottom: calc(100% + 8px);
+	transform-origin: bottom left;
+}
+
+.status-dropdown.open-up .status-dropdown-menu.open {
+	transform: scale(1) translateY(0);
+}
+
+.status-dropdown.open-up .status-dropdown-menu:not(.open) {
+	transform: scale(0.9) translateY(6px);
+}
+
+.status-dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 0.55rem 0.7rem;
+	border-radius: 9px;
+	font-size: 0.85rem;
+	font-weight: 500;
+	color: #222;
+	cursor: pointer;
+	transition: background-color 0.12s ease;
+}
+
+.status-dropdown-item:hover {
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+.status-dropdown-item.selected {
+	font-weight: 700;
+}
+
+.dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.dot.approved {
+	background-color: #22c55e;
+}
+
+.dot.warning {
+	background-color: #f59e0b;
+}
+
+.dot.rejected {
+	background-color: #ef4444;
+}
+
+.check {
+	margin-left: auto;
+	color: var(--accent-500);
+	font-size: 0.8rem;
+}
+
+@media screen and (max-width: 900px) {
+	.container .review {
+		grid-column: 1/3;
+	}
+
+	.review {
+		padding: 1rem;
+		overflow-x: hidden;
+	}
+
+	.review-row-head {
+		display: none;
+	}
+
+	.review-row {
+		grid-template-columns: 1fr;
+		row-gap: 0.6rem;
+		padding: 1rem;
+	}
+
+	.col-status,
+	.col-active {
+		justify-self: start;
+	}
+
+	.status-dropdown {
+		width: 100%;
+	}
+
+	.status-dropdown-menu {
+		width: 100%;
+		max-width: calc(100vw - 3rem);
+	}
 }
