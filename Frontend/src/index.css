@@ -1,13 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
+
 * {
 	margin: 0px;
 	padding: 0px;
 	box-sizing: border-box;
-	font-family: 'Outfit';
+	font-family:
+		'Manrope',
+		-apple-system,
+		BlinkMacSystemFont,
+		'Helvetica Neue',
+		Arial,
+		sans-serif;
 }
 :root {
-	--bg: #ffebee;
+	--bg: #ffffff;
 	--accent: #d50000;
 	--accent-100: #ffcdd2;
 	--accent-200: #ef9a9a;
@@ -18,14 +24,10 @@
 	background-color: var(--bg);
 }
 .container {
-	display: grid;
-	grid-template-rows: 0px 1fr;
-	grid-template-columns: 220px 1fr;
+	display: block;
 }
 .grid {
-	display: grid;
-	grid-template-rows: 0px 1fr;
-	grid-template-columns: 220px 1fr;
+	display: block;
 }
 @media screen and (max-width: 720px) {
 	.app-container {

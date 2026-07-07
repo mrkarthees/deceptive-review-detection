@@ -1,37 +1,296 @@
 .container .thankyou {
-  width: 100%;
-  min-height: 90dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  grid-row: 2;
-  grid-column: 2;
+	width: 100%;
+	min-height: 90dvh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	grid-row: 2;
+	grid-column: 2;
 }
 .grid .thankyou {
-  width: 100%;
-  min-height: 90dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  grid-row: 2;
-  grid-column: 1/3;
+	width: 100%;
+	min-height: 90dvh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	grid-row: 2;
+	grid-column: 1/3;
 }
+
+.thankyou {
+	background-color: var(--bg);
+}
+
+.thankyou-card {
+	position: relative;
+	width: 100%;
+	max-width: 380px;
+	background-color: #ffffff;
+	border: 1px solid #ececec;
+	border-radius: 10px;
+	padding: 2.5rem 2rem 2rem;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	overflow: hidden;
+	animation: cardIn 0.5s ease both;
+}
+
+@keyframes cardIn {
+	from {
+		opacity: 0;
+		transform: translateY(12px) scale(0.98);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+/* ---------- confetti ---------- */
+.confetti-wrap {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+.confetti {
+	position: absolute;
+	top: -10px;
+	width: 7px;
+	height: 7px;
+	border-radius: 2px;
+	opacity: 0.9;
+	animation: confettiFall linear infinite;
+}
+@keyframes confettiFall {
+	0% {
+		transform: translateY(-10px) rotate(0deg);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(320px) rotate(360deg);
+		opacity: 0;
+	}
+}
+
+/* ---------- check mark ---------- */
+.check-circle {
+	width: 64px;
+	height: 64px;
+	margin-bottom: 1rem;
+}
+.check-svg {
+	width: 100%;
+	height: 100%;
+}
+.check-circle-bg {
+	fill: none;
+	stroke: var(--accent);
+	stroke-width: 3;
+	stroke-dasharray: 170;
+	stroke-dashoffset: 170;
+	animation: circleDraw 0.6s ease forwards;
+}
+.check-mark {
+	fill: none;
+	stroke: var(--accent);
+	stroke-width: 4;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-dasharray: 40;
+	stroke-dashoffset: 40;
+	animation: checkDraw 0.4s ease forwards 0.55s;
+}
+@keyframes circleDraw {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+@keyframes checkDraw {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+/* ---------- text ---------- */
 .thankyou h1 {
-  font-size: 1.6rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--black);
+	animation: fadeUp 0.5s ease both 0.15s;
 }
+.thankyou .subtitle {
+	margin: 0.5rem 0 1.5rem;
+	font-size: 0.9rem;
+	font-weight: 400;
+	color: #8a8a8a;
+	line-height: 1.5;
+	animation: fadeUp 0.5s ease both 0.25s;
+}
+@keyframes fadeUp {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ---------- delivery scene ---------- */
+.delivery-scene {
+	width: 100%;
+	max-width: 220px;
+	margin: 0.5rem 0 1.75rem;
+	position: relative;
+}
+.truck-svg {
+	width: 100%;
+	height: auto;
+	overflow: visible;
+	animation: driveIn 0.8s ease both 0.3s;
+}
+@keyframes driveIn {
+	from {
+		transform: translateX(-40px);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+.truck-group {
+	animation: truckBounce 1.1s ease-in-out infinite 1.1s;
+}
+@keyframes truckBounce {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-2.5px);
+	}
+}
+
+.truck-body {
+	fill: var(--accent);
+}
+.truck-cabin {
+	fill: var(--accent-500);
+}
+.truck-window {
+	fill: #ffffff;
+	opacity: 0.85;
+}
+
+.wheel circle:first-child {
+	fill: var(--black);
+}
+.wheel .hub {
+	fill: #dcdcdc;
+}
+.wheel {
+	transform-origin: center;
+	transform-box: fill-box;
+	animation: wheelSpin 0.55s linear infinite;
+}
+
+@keyframes wheelSpin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.puff {
+	fill: #e0e0e0;
+	opacity: 0;
+	animation: puffOut 1.4s ease-out infinite 1.1s;
+}
+.puff-2 {
+	animation-delay: 1.4s;
+}
+@keyframes puffOut {
+	0% {
+		opacity: 0;
+		transform: translate(0, 0) scale(0.6);
+	}
+	30% {
+		opacity: 0.7;
+	}
+	100% {
+		opacity: 0;
+		transform: translate(-14px, -8px) scale(1.4);
+	}
+}
+
+.road {
+	width: 100%;
+	height: 2px;
+	margin-top: -6px;
+	background: repeating-linear-gradient(
+		to right,
+		#d9d9d9 0,
+		#d9d9d9 10px,
+		transparent 10px,
+		transparent 20px
+	);
+	background-size: 40px 2px;
+	animation: roadMove 0.6s linear infinite 1.1s;
+}
+@keyframes roadMove {
+	from {
+		background-position: 0 0;
+	}
+	to {
+		background-position: -40px 0;
+	}
+}
+
+/* ---------- button ---------- */
 .thankyou button {
-  padding: 0.7rem 2rem;
-  border: none;
-  outline: none;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-weight: bold;
-  background-color: var(--accent-100);
-  color: var(--accent);
-  cursor: pointer;
-  border-radius: 1rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	padding: 0.8rem 2rem;
+	border: none;
+	outline: none;
+	letter-spacing: 0.2px;
+	text-transform: uppercase;
+	background-color: var(--accent);
+	color: #fff;
+	cursor: pointer;
+	border-radius: 6px;
+	transition:
+		background-color 0.15s ease,
+		transform 0.15s ease;
+	animation: fadeUp 0.5s ease both 0.4s;
+}
+.thankyou button:hover {
+	background-color: var(--accent-500);
+	transform: translateY(-1px);
+}
+.thankyou button:active {
+	transform: translateY(0);
+}
+
+@media screen and (max-width: 720px) {
+	.container .thankyou {
+		grid-row: 2;
+		grid-column: 1/3;
+	}
+	.thankyou-card {
+		padding: 2rem 1.5rem 1.5rem;
+		border: none;
+		box-shadow: none;
+	}
 }

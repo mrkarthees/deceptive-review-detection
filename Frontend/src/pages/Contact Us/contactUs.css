@@ -1,94 +1,486 @@
+/* ==========================================================
+   Layout — matches Home page grid placement
+   ========================================================== */
 .container .contact {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 100dvh;
-  grid-row: 2;
-  grid-column: 2;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	grid-row: 2;
+	grid-column: 2;
+	padding: 1.5rem 1.5rem 3rem;
+	box-sizing: border-box;
 }
 .grid .contact {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 100dvh;
-  grid-row: 2;
-  grid-column: 1/3;
-}
-.contact img {
-  width: 90%;
-  border-radius: 1rem;
-  margin: 1rem;
-}
-.contact h1 {
-  font-size: clamp(1.9rem, 5vw, 2.2rem);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-align: center;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	grid-row: 2;
+	grid-column: 1/3;
+	padding: 1.5rem 1.5rem 3rem;
+	box-sizing: border-box;
 }
 
-.address {
-  width: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  gap: 1rem;
-  background-color: #ffcdd23a;
-  border: 1px solid var(--accent-100);
-  border-radius: 1rem;
-  margin-bottom: 1rem;
+/* ==========================================================
+   Keyframes
+   ========================================================== */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
-.address-details {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  height: 100%;
-  padding: 1rem;
-  gap: 1rem;
+@keyframes fadeSlide {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
-.address-details p {
-  width: fit-content;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  font-size: 1rem;
-  margin: 0;
-  line-height: 1.5;
-  text-align: left;
-  letter-spacing: 1px;
+@keyframes panLeftRight {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-15%);
+	}
 }
-.address-details i {
-  color: var(--accent);
+@keyframes bounceDown {
+	0%,
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	50% {
+		transform: translateY(10px);
+		opacity: 0.6;
+	}
 }
-.address-icon {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffcdd2;
-  border-radius: 0 1rem 1rem 0;
+@keyframes sparkSweep {
+	0% {
+		transform: translateX(-150%) rotate(20deg);
+		opacity: 0;
+	}
+	15% {
+		opacity: 1;
+	}
+	60% {
+		opacity: 0.6;
+	}
+	100% {
+		transform: translateX(150%) rotate(20deg);
+		opacity: 0;
+	}
 }
-.address .address-icon i {
-  font-size: 2rem;
-  color: var(--accent);
+@keyframes sparkGlow {
+	0% {
+		box-shadow: 0 0 0 0 rgba(213, 0, 0, 0);
+	}
+	30% {
+		box-shadow: 0 0 24px 4px rgba(213, 0, 0, 0.35);
+	}
+	100% {
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+	}
 }
+@keyframes pulseGlow {
+	0%,
+	100% {
+		box-shadow: 0 0 0 0 rgba(213, 0, 0, 0.15);
+	}
+	50% {
+		box-shadow: 0 0 0 8px rgba(213, 0, 0, 0);
+	}
+}
+
+/* ==========================================================
+   Banner / Slideshow
+   ========================================================== */
+.contact-banner {
+	position: relative;
+	width: 100%;
+	height: 420px;
+	overflow: hidden;
+	border-radius: 14px;
+	margin-bottom: 2rem;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	animation: fadeInUp 0.6s ease both;
+}
+
+.contact-banner .slide {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	opacity: 0;
+	transition: opacity 1s ease-in-out;
+}
+.contact-banner .slide.active {
+	opacity: 1;
+}
+
+.banner-overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0.4) 0%,
+		rgba(0, 0, 0, 0.7) 100%
+	);
+	z-index: 1;
+}
+
+.contact-content .banner-text {
+	position: static;
+	z-index: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	color: var(--black);
+	margin-bottom: 1.75rem;
+	animation: fadeInUp 0.6s ease both;
+}
+.contact-content .banner-text h1 {
+	font-size: clamp(1.9rem, 5vw, 2.4rem);
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	font-weight: 800;
+	color: var(--black);
+	text-shadow: none;
+}
+.contact-content .banner-text h1::after {
+	content: '';
+	display: block;
+	width: 60px;
+	height: 3px;
+	background-color: var(--accent);
+	margin: 0.6rem auto 0;
+	border-radius: 2px;
+}
+.contact-content .banner-text p {
+	margin-top: 0.5rem;
+	font-size: 0.95rem;
+	letter-spacing: 0.5px;
+	color: #555;
+}
+
+.scroll-indicator {
+	position: absolute;
+	bottom: 1.75rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 3;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.3rem;
+	color: #fff;
+	cursor: pointer;
+	animation: bounceDown 1.6s ease infinite;
+}
+.scroll-indicator span {
+	font-size: 0.75rem;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	color: var(--accent-100);
+}
+.scroll-indicator svg {
+	font-size: 1.4rem;
+	color: #fff;
+	filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+.slide-dots {
+	position: absolute;
+	bottom: 1rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 2;
+	display: flex;
+	gap: 0.5rem;
+}
+.slide-dots .dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background-color: rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+	transition: all 0.25s ease;
+}
+.slide-dots .dot.active {
+	background-color: var(--accent);
+	width: 22px;
+	border-radius: 4px;
+}
+
+/* ==========================================================
+   Content wrapper
+   ========================================================== */
+.contact-content {
+	width: 100%;
+	max-width: 1100px;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+/* ==========================================================
+   Info Cards — styled like Home page product cards
+   ========================================================== */
+.info-cards {
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 1.25rem;
+}
+
+.info-card {
+	background-color: #ffffff;
+	border: 1px solid var(--accent-100);
+	border-radius: 14px;
+	padding: 1.25rem;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+	opacity: 0;
+	animation: fadeInUp 0.6s ease forwards;
+	transition:
+		transform 0.15s ease,
+		box-shadow 0.15s ease,
+		border-color 0.15s ease;
+}
+.info-card:nth-child(1) {
+	animation-delay: 0.1s;
+}
+.info-card:nth-child(2) {
+	animation-delay: 0.25s;
+}
+.info-card:nth-child(3) {
+	animation-delay: 0.4s;
+}
+
+.info-card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 8px 24px rgba(213, 0, 0, 0.08);
+	border-color: var(--accent-200);
+}
+
+.info-icon {
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background-color: #ffcdd23a;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.2rem;
+	color: var(--accent);
+	animation: pulseGlow 2.4s ease infinite;
+}
+
+.info-text h4 {
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: var(--black);
+	margin-bottom: 0.2rem;
+}
+.info-text p {
+	font-size: 0.9rem;
+	color: #444;
+	line-height: 1.4;
+	letter-spacing: 0.2px;
+}
+
+/* ==========================================================
+   Contact Form
+   ========================================================== */
+.contact-form {
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	background-color: #ffffff;
+	border: 1px solid var(--accent-100);
+	border-radius: 14px;
+	padding: 2rem;
+	box-sizing: border-box;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+	opacity: 0;
+	animation: fadeInUp 0.6s ease 0.5s forwards;
+}
+
+.contact-form.spark {
+	animation:
+		fadeInUp 0.6s ease forwards,
+		sparkGlow 1.4s ease forwards;
+}
+
+.contact-form.spark::after {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -60%;
+	width: 40%;
+	height: 200%;
+	background: linear-gradient(
+		120deg,
+		transparent 0%,
+		rgba(255, 255, 255, 0.75) 50%,
+		transparent 100%
+	);
+	pointer-events: none;
+	animation: sparkSweep 1.1s ease-out forwards;
+}
+
+.contact-form h1 {
+	font-size: clamp(1.1rem, 3vw, 1.4rem);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--black);
+	margin: 0 0 1.25rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid var(--accent-100);
+}
+
+.form-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	margin-bottom: 1.25rem;
+}
+
+.form-group label {
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: var(--black);
+	letter-spacing: 0.2px;
+}
+
+.form-group input,
+.form-group textarea {
+	width: 100%;
+	padding: 0.75rem 0.9rem;
+	border: 1px solid var(--accent-100);
+	border-radius: 10px;
+	font-size: 0.9rem;
+	color: var(--black);
+	background-color: var(--bg);
+	resize: vertical;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px rgba(213, 0, 0, 0.1);
+}
+
+.contact-form button {
+	appearance: none;
+	border: none;
+	background-color: var(--accent);
+	color: #fff;
+	font-size: 0.95rem;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+	padding: 0.85rem 2rem;
+	border-radius: 10px;
+	cursor: pointer;
+	transition:
+		transform 0.15s ease,
+		box-shadow 0.15s ease,
+		background-color 0.2s ease;
+}
+
+.contact-form button:hover {
+	background-color: #b30000;
+	transform: translateY(-2px);
+	box-shadow: 0 8px 20px rgba(213, 0, 0, 0.25);
+}
+
+.contact-form button:active {
+	transform: translateY(0);
+}
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
 @media screen and (max-width: 720px) {
-  .container .contact {
-    grid-row: 2;
-    grid-column: 1/3;
-  }
-  .address {
-    flex-direction: column;
-  }
-  .address-details {
-    width: 100%;
-  }
-  .address-icon {
-    display: none;
-  }
+	.container .contact {
+		grid-row: 2;
+		grid-column: 1/3;
+		padding: 1rem 1rem 2rem;
+	}
+
+	.contact {
+		position: relative;
+	}
+
+	.contact-banner {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 0;
+		margin-bottom: 0;
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	.contact-banner .slide {
+		width: 140%;
+		left: -20%;
+		animation: panLeftRight 12s ease-in-out infinite alternate;
+	}
+	.contact-banner .slide.active {
+		opacity: 1;
+	}
+
+	.contact-content {
+		position: relative;
+		z-index: 2;
+		margin-top: 100vh;
+		background-color: var(--bg);
+		border-radius: 24px 24px 0 0;
+		padding: 2rem 1rem 1rem;
+		box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+	}
+
+	.form-row {
+		grid-template-columns: 1fr;
+	}
+
+	.contact-form {
+		padding: 1.25rem;
+	}
+
+	.info-card {
+		padding: 1rem;
+	}
+}
+
+@media screen and (max-width: 420px) {
+	.banner-text h1 {
+		letter-spacing: 2px;
+	}
 }

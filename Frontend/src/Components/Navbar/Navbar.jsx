@@ -1,110 +1,77 @@
-import axios from 'axios'
-import { useContext, useRef } from 'react'
-import { DataContext } from '../../Context/Context.jsx'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { backendURL } from '../../App.jsx'
-import './navbar.css'
-import Logo from '../../assets/images/logo_1.png'
-import { FiSearch } from 'react-icons/fi'
-import {
-  HiOutlineShoppingCart,
-  HiOutlineUser,
-  HiOutlineLogout,
-} from 'react-icons/hi'
-import { HiMiniBars3CenterLeft } from 'react-icons/hi2'
+import { useContext } from 'react';
+import { DataContext } from '../../Context/Context.jsx';
+import { NavLink, useLocation } from 'react-router-dom';
+import './navbar.css';
 
-const Navbar = ({ token, setToken }) => {
-  const {
-    searchBar,
-    setSearchBar,
-    slider,
-    setSlider,
-    userInput,
-    setUserInput,
-  } = useContext(DataContext)
-  const barIcon = useRef()
-  const location = useLocation()
-  const navigate = useNavigate()
-  if (location.pathname === '/shop') {
-    setSearchBar(true)
-  } else {
-    setSearchBar(false)
-  }
+import { FiSearch } from 'react-icons/fi';
+import { HiOutlineChevronRight } from 'react-icons/hi2';
 
-  const logoutHandler = async () => {
-    try {
-      const response = await axios.post(backendURL + '/user/logout')
+const pathLabels = {
+	'': 'Home',
+	shop: 'Shop',
+	'contact-us': 'Contact Us',
+	login: 'Login',
+	register: 'Register',
+};
 
-      if (response.data.result) {
-        localStorage.clear()
-        setToken('')
-        navigate('/login')
-      }
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-  const barClickHandler = () => {
-    setSlider(true)
-  }
-  return (
-    <main className={`${slider == true ? 'container' : 'grid'}`}>
-      <section className="navbar">
-        <div className="navbar-container">
-          <nav>
-            <div
-              ref={barIcon}
-              className={`${slider == true ? 'visibility' : 'bars'}`}
-            >
-              <i onClick={barClickHandler}>
-                <HiMiniBars3CenterLeft />
-              </i>
-            </div>
-            <div
-              className={`${
-                location.pathname === '/shop' ? 'display-none' : 'logo'
-              }`}
-            >
-              <img src={Logo} />
-            </div>
+const Navbar = () => {
+	const { searchBar, setSearchBar, userInput, setUserInput } =
+		useContext(DataContext);
+	const location = useLocation();
 
-            <div
-              className={`${
-                searchBar === false ? 'display-none' : 'search-box'
-              }`}
-            >
-              <input
-                type="text"
-                onChange={(e) => setUserInput(e.target.value)}
-                value={userInput}
-                placeholder="Search"
-              />
-              <i>
-                <FiSearch />
-              </i>
-            </div>
-            <div className="user-icons">
-              {/* <i className="cart-icon">
-            <HiOutlineShoppingCart />
-            <p>0</p>
-          </i> */}
-              <NavLink to="login">
-                {token === '' ? (
-                  <i>
-                    <HiOutlineUser />
-                  </i>
-                ) : (
-                  <i onClick={logoutHandler}>
-                    <HiOutlineLogout />
-                  </i>
-                )}
-              </NavLink>
-            </div>
-          </nav>
-        </div>
-      </section>
-    </main>
-  )
-}
+	if (location.pathname === '/shop') {
+		setSearchBar(true);
+	} else {
+		setSearchBar(false);
+	}
 
-export default Navbar
+	const segments = location.pathname.split('/').filter(Boolean);
+	const crumbs = [
+		{ label: 'Home', to: '/' },
+		...segments.map((seg, i) => ({
+			label: pathLabels[seg] || seg,
+			to: '/' + segments.slice(0, i + 1).join('/'),
+		})),
+	];
+
+	return (
+		<section className='navbar'>
+			<div className='navbar-container'>
+				<nav>
+					<div className='breadcrumb'>
+						{crumbs.map((crumb, i) => (
+							<span key={crumb.to} className='crumb'>
+								{i > 0 && (
+									<span className='crumb-sep'>
+										<HiOutlineChevronRight />
+									</span>
+								)}
+								{i === crumbs.length - 1 ? (
+									<span className='crumb-current'>{crumb.label}</span>
+								) : (
+									<NavLink to={crumb.to} className='crumb-link'>
+										{crumb.label}
+									</NavLink>
+								)}
+							</span>
+						))}
+					</div>
+
+					<div className={`${searchBar === false ? 'display-none' : 'search-box'}`}>
+						<input
+							type='text'
+							onChange={(e) => setUserInput(e.target.value)}
+							value={userInput}
+							placeholder='Search'
+						/>
+						<i>
+							<FiSearch />
+						</i>
+					</div>
+				</nav>
+			</div>
+		</section>
+	);
+};
+
+export default Navbar;
