@@ -3,7 +3,7 @@ import { DataContext } from '../../Context/Context';
 import axios from 'axios';
 import './register.css';
 import { NavLink, useNavigate } from 'react-router-dom';
-
+import { backendURL } from '../../App';
 const Register = () => {
 	const { slider } = useContext(DataContext);
 	const navigate = useNavigate();
@@ -14,7 +14,7 @@ const Register = () => {
 
 	const newUser = async () => {
 		try {
-			const { data } = await axios.post('http://localhost:4000/user/register', {
+			const { data } = await axios.post(`${backendURL}/user/register`, {
 				name,
 				email,
 				password,
