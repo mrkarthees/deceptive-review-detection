@@ -150,7 +150,7 @@ export const adminLoginController = async (req, res) => {
 			email === process.env.ADMIN_EMAIL &&
 			password === process.env.ADMIN_PASSWORD
 		) {
-			const token = jwt.sign({ email }, process.env.JWT_TOKEN);
+			const token = jwt.sign({ email, password }, process.env.JWT_TOKEN);
 			res.json({
 				heed: 'Welcome Admin ',
 				result: true,

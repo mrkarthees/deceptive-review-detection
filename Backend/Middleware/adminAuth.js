@@ -11,7 +11,7 @@ const adminAuth = async (req, res, next) => {
 			});
 		}
 		const tokenDecode = jwt.verify(token, process.env.JWT_TOKEN);
-		if (tokenDecode !== process.env.ADMIN_PASSWORD) {
+		if (tokenDecode.password !== process.env.ADMIN_PASSWORD) {
 			return res.json({
 				heed: 'token wrong Please Login',
 				result: false,
