@@ -2,37 +2,48 @@ import React, { useContext, useState } from 'react';
 import { DataContext } from '../../Context/Context';
 import axios from 'axios';
 import './login.css';
-import { NavLink, Navigate, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { backendURL } from '../../App';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = ({ setToken }) => {
-	const { slider, setSlider } = useContext(DataContext);
+	const { slider } = useContext(DataContext);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
 
 	const getUser = async () => {
+		if (!email || !password) {
+			toast.warn('Please enter both email and password');
+			return;
+		}
+
 		try {
-			const user = await axios.post(backendURL + '/user/login', {
+			const { data } = await axios.post(backendURL + '/user/login', {
 				email,
 				password,
 			});
 
-			if (user.data.result) {
-				setToken(user.data.token);
+			if (data.result) {
+				setToken(data.token);
+				toast.success(data.message || 'Login successful');
 				navigate('/');
 			} else {
-				console.log('Please Register');
+				toast.error(data.message || 'Invalid credentials, please register');
 			}
 		} catch (error) {
-			console.error(error.message);
+			toast.error(
+				error.response?.data?.message || 'Something went wrong. Please try again.',
+			);
+		} finally {
+			setEmail('');
+			setPassword('');
 		}
-		setEmail('');
-		setPassword('');
 	};
 
 	return (
-		<main className={`${slider == true ? 'container' : 'grid'}`}>
+		<main className={`${slider === true ? 'container' : 'grid'}`}>
 			<section className='login'>
 				<div className='login-container'>
 					<div className='login-card'>

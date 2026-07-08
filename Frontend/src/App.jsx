@@ -12,6 +12,8 @@ import ShopItem from './pages/Shop/ShopItem.jsx';
 import Product from './pages/Product/Product.jsx';
 import Thankyou from './Components/Thankyou/Thankyou.jsx';
 import Order from './pages/Order/Order.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
@@ -23,6 +25,7 @@ const App = () => {
 	}, [token]);
 	return (
 		<>
+			<ToastContainer position='top-right' autoClose={3000} />
 			{token === '' ? (
 				<Routes>
 					<Route index element={<Login setToken={setToken} />} />

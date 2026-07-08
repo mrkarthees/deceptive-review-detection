@@ -4,6 +4,9 @@ import axios from 'axios';
 import './register.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { backendURL } from '../../App';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Register = () => {
 	const { slider } = useContext(DataContext);
 	const navigate = useNavigate();
@@ -13,6 +16,11 @@ const Register = () => {
 	const [password, setPassword] = useState('');
 
 	const newUser = async () => {
+		if (!name || !email || !password) {
+			toast.warn('Please fill in all fields');
+			return;
+		}
+
 		try {
 			const { data } = await axios.post(`${backendURL}/user/register`, {
 				name,
@@ -21,7 +29,7 @@ const Register = () => {
 			});
 
 			if (data.result) {
-				alert(data.heed || 'Registration successful');
+				toast.success(data.heed || 'Registration successful');
 
 				setName('');
 				setEmail('');
@@ -29,11 +37,10 @@ const Register = () => {
 
 				navigate('/login');
 			} else {
-				alert(data.heed || 'Registration failed');
+				toast.error(data.heed || 'Registration failed');
 			}
 		} catch (error) {
-			console.error(error);
-			alert('Something went wrong');
+			toast.error(error.response?.data?.message || 'Something went wrong');
 		}
 	};
 
