@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { DataContext } from '../../Context/Context';
 import axios from 'axios';
 import { backendURL } from '../../App';
+import { jwtDecode } from 'jwt-decode';
 import Logo from '../../assets/Image/logo_1.png';
 import {
 	HiOutlineSquares2X2,
@@ -20,11 +21,28 @@ const navItems = [
 	{ to: '/', label: 'Collection', icon: <HiOutlineArchiveBox />, end: true },
 	{ to: '/add', label: 'Add Product', icon: <HiOutlinePlusCircle /> },
 	{ to: '/review', label: 'Reviews', icon: <HiOutlineStar /> },
+	{ to: '/orders', label: 'Orders', icon: <HiOutlineArchiveBox /> },
 ];
 
 const Sidebar = ({ token, setToken }) => {
 	const { slider, setSlider } = useContext(DataContext);
 	const navigate = useNavigate();
+	const [email, setEmail] = useState('');
+
+	useEffect(() => {
+		if (token) {
+			try {
+				const decoded = jwtDecode(token);
+				// adjust the key below to match whatever your backend puts in the JWT payload
+				setEmail(decoded.email || decoded.Email || '');
+			} catch (error) {
+				console.log('Invalid token:', error.message);
+				setEmail('');
+			}
+		} else {
+			setEmail('');
+		}
+	}, [token]);
 
 	const logoutHandler = async () => {
 		try {
@@ -38,6 +56,8 @@ const Sidebar = ({ token, setToken }) => {
 			console.log(error.message);
 		}
 	};
+
+	const initial = email ? email.charAt(0).toUpperCase() : '?';
 
 	return (
 		<>
@@ -68,6 +88,13 @@ const Sidebar = ({ token, setToken }) => {
 
 					{token !== '' && (
 						<div className='rail-bottom'>
+							<div className='rail-user'>
+								<span className='rail-avatar'>{initial}</span>
+								<span className='rail-email' title={email}>
+									{email}
+								</span>
+							</div>
+
 							<button className='rail-link rail-logout' onClick={logoutHandler}>
 								<span className='rail-icon'>
 									<HiOutlineLogout />
@@ -124,6 +151,13 @@ const Sidebar = ({ token, setToken }) => {
 
 				{token !== '' && (
 					<div className='mobile-bottom'>
+						<div className='mobile-user'>
+							<span className='mobile-avatar'>{initial}</span>
+							<span className='mobile-email' title={email}>
+								{email}
+							</span>
+						</div>
+
 						<button className='mobile-link mobile-logout' onClick={logoutHandler}>
 							<span className='mobile-icon'>
 								<HiOutlineLogout />

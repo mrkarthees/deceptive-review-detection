@@ -37,7 +37,7 @@ const App = () => {
 							<Route path='/dashboard' element={<Dashboard token={token} />} />
 							<Route path='/:productId' element={<UpdateProduct token={token} />} />
 							<Route path='/review' element={<Review />} />
-							<Route path='/order' element={<Order />} />
+							<Route path='/orders' element={<Order />} />
 							<Route path='/login' element={<Login />} />
 							<Route path='/add' element={<AddProduct token={token} />} />
 							<Route path='*' element={<Error />} />

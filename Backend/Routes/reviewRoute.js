@@ -5,9 +5,11 @@ import {
 	clientReviewList,
 	updateReviewStatus,
 	deleteReview,
+	reviewAvailable,
 } from '../Controller/reviewController.js';
 const reviewRoute = express.Router();
-reviewRoute.get('/list', clientReviewList);
+reviewRoute.post('/review-available', reviewAvailable);
+reviewRoute.get('/client-list/:id', clientReviewList);
 reviewRoute.get('/adminlist', adminReviewList);
 reviewRoute.post('/add/:id', addReview);
 reviewRoute.put('/update/:id', updateReviewStatus);

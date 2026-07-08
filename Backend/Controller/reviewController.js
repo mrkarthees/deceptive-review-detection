@@ -2,11 +2,64 @@ import { Review } from '../models/reviewModel.js';
 import { Login } from '../models/loginModel.js';
 import { moderateReview } from '../Middleware/geminiMiddleware.js';
 import sendEmail from '../utils/sendEmail.js'; // Your email utility
+import { Order } from '../models/orderModel.js';
 
-// ===============================
+// Review available
+export const reviewAvailable = async (req, res) => {
+	try {
+		const { userId, productId } = req.body;
+
+		if (!userId || !productId) {
+			return res.json({
+				result: false,
+				isReview: false,
+				heed: 'User ID and Product ID are required.',
+			});
+		}
+
+		// Total purchases of this product by the user
+		const orderCount = await Order.countDocuments({
+			userId,
+			productId,
+		});
+
+		if (orderCount === 0) {
+			return res.json({
+				result: true,
+				isReview: false,
+				heed: 'You must purchase this product before leaving a review.',
+			});
+		}
+
+		// Total reviews written by the user for this product
+		const reviewCount = await Review.countDocuments({
+			userId,
+			productId,
+		});
+
+		if (reviewCount >= orderCount) {
+			return res.json({
+				result: true,
+				isReview: false,
+				heed: 'You have already reviewed all of your purchases of this product.',
+			});
+		}
+
+		return res.json({
+			result: true,
+			isReview: true,
+			heed: 'Please leave your review for this product.',
+		});
+	} catch (error) {
+		return res.json({
+			result: false,
+			isReview: false,
+			mistake: error.message,
+		});
+	}
+};
+
 // Add Review
-// ===============================
-
 export const addReview = async (req, res) => {
 	try {
 		const productId = req.params.id;
@@ -199,24 +252,25 @@ export const deleteReview = async (req, res) => {
 	}
 };
 
-// ===============================
 // Client Review List
-// ===============================
-
 export const clientReviewList = async (req, res) => {
 	try {
-		const { productId } = req.params;
+		const { id: userId } = req.params;
 
 		const reviews = await Review.find({
-			productId,
 			active: true,
 			status: 'approved',
 		}).sort({ createdAt: -1 });
 
+		const reviewList = reviews.map((review) => ({
+			...review.toObject(),
+			isDelete: review.userId.toString() === userId,
+		}));
+
 		return res.json({
 			result: true,
 			heed: 'Reviews fetched successfully.',
-			reviews,
+			reviews: reviewList,
 		});
 	} catch (error) {
 		return res.json({
@@ -226,10 +280,7 @@ export const clientReviewList = async (req, res) => {
 	}
 };
 
-// ===============================
 // Admin Review List
-// ===============================
-
 export const adminReviewList = async (req, res) => {
 	try {
 		const reviews = await Review.find({})

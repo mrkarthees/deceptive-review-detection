@@ -278,6 +278,45 @@
 	border: 1px solid var(--accent-100);
 }
 
+.review-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+	gap: 1rem;
+}
+
+.review-user {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-weight: 600;
+}
+
+.review-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.review-actions small {
+	font-size: 13px;
+	color: #777;
+	white-space: nowrap;
+}
+
+.delete-review {
+	font-size: 15px;
+	color: #d32f2f;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.delete-review:hover {
+	color: #b71c1c;
+	transform: scale(1.1);
+}
+
 .review-container .reviews h4 {
 	display: flex;
 	align-items: center;
@@ -327,5 +366,14 @@
 	.review-container,
 	.product-details {
 		border-radius: 14px;
+	}
+	.review-top {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.review-actions {
+		width: 100%;
+		justify-content: space-between;
 	}
 }

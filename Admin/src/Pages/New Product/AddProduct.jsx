@@ -3,10 +3,12 @@ import { DataContext } from '../../Context/Context';
 import './addProduct.css';
 import axios from 'axios';
 import { backendURL } from '../../App';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { HiOutlinePhoto } from 'react-icons/hi2';
 
 const AddProduct = ({ token }) => {
+	const navigate = useNavigate();
 	const [imgOne, setImgOne] = useState(false);
 	const [name, setName] = useState('');
 	const [price, setPrice] = useState('');
@@ -15,9 +17,11 @@ const AddProduct = ({ token }) => {
 	const [stock, setStock] = useState('Stock');
 	const [brand, setBrand] = useState('Stars');
 	const [category, setCategory] = useState('Bangle');
+	const [submitting, setSubmitting] = useState(false);
 
 	const onSubmitHandler = async (e) => {
 		e.preventDefault();
+		setSubmitting(true);
 		try {
 			const formData = new FormData();
 			formData.append('name', name);
@@ -28,22 +32,27 @@ const AddProduct = ({ token }) => {
 			formData.append('category', category);
 			formData.append('offer', offer);
 			imgOne && formData.append('imgOne', imgOne);
+
 			const response = await axios.post(backendURL + '/product/add', formData, {
 				headers: { token },
 			});
 
 			if (response.data.result) {
+				toast.success(response.data.heed || 'Product added successfully');
 				setImgOne(false);
 				setName('');
 				setPrice('');
 				setDescription('');
 				setOffer('');
-				console.log(response.data.heed);
+				navigate('/');
 			} else {
-				console.log(response.data.mistake);
+				toast.error(response.data.mistake || 'Failed to add product');
 			}
 		} catch (error) {
 			console.error(error.message);
+			toast.error('Something went wrong while adding product');
+		} finally {
+			setSubmitting(false);
 		}
 	};
 
@@ -175,8 +184,8 @@ const AddProduct = ({ token }) => {
 								Cancel
 							</button>
 						</NavLink>
-						<button className='btn btn-primary' type='submit'>
-							Add Product
+						<button className='btn btn-primary' type='submit' disabled={submitting}>
+							{submitting ? 'Adding...' : 'Add Product'}
 						</button>
 					</div>
 				</form>

@@ -2,10 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Login } from '../models/loginModel.js';
 
-// ==============================
-// Register Controller
-// ==============================
-
+// Register
 export const registerController = async (req, res) => {
 	try {
 		const { name, email, password } = req.body;
@@ -64,10 +61,7 @@ export const registerController = async (req, res) => {
 	}
 };
 
-// ==============================
-// Login Controller
-// ==============================
-
+// Login
 export const loginController = async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -78,7 +72,7 @@ export const loginController = async (req, res) => {
 		if (!user) {
 			return res.json({
 				result: false,
-				heed: 'Please register first.',
+				heed: 'Please register',
 			});
 		}
 
@@ -108,10 +102,11 @@ export const loginController = async (req, res) => {
 			});
 		}
 
-		// Generate Token
 		const token = jwt.sign(
 			{
 				id: user._id,
+				name: user.name,
+				email: user.email,
 			},
 			process.env.JWT_TOKEN,
 			{
@@ -129,11 +124,6 @@ export const loginController = async (req, res) => {
 			result: true,
 			heed: 'Welcome to STARS, happy shopping!',
 			token,
-			user: {
-				id: user._id,
-				name: user.name,
-				email: user.email,
-			},
 		});
 	} catch (error) {
 		return res.json({
@@ -142,6 +132,7 @@ export const loginController = async (req, res) => {
 		});
 	}
 };
+
 //Logout Controller
 export const logoutController = async (req, res) => {
 	res.clearCookie('token');
@@ -151,8 +142,7 @@ export const logoutController = async (req, res) => {
 	});
 };
 
-//Admin Login Controll
-
+//Admin Login
 export const adminLoginController = async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -160,7 +150,7 @@ export const adminLoginController = async (req, res) => {
 			email === process.env.ADMIN_EMAIL &&
 			password === process.env.ADMIN_PASSWORD
 		) {
-			const token = jwt.sign(password, process.env.JWT_TOKEN);
+			const token = jwt.sign({ email }, process.env.JWT_TOKEN);
 			res.json({
 				heed: 'Welcome Admin ',
 				result: true,

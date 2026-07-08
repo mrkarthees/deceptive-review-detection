@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { backendURL } from '../../App';
 import { DataContext } from '../../Context/Context';
+import { toast } from 'react-toastify';
 import './updateProduct.css';
 import { HiOutlinePhoto } from 'react-icons/hi2';
 
@@ -19,24 +20,30 @@ const UpdateProduct = ({ token }) => {
 	const [stock, setStock] = useState('Stock');
 	const [brand, setBrand] = useState('');
 	const [category, setCategory] = useState('Bangle');
+	const [submitting, setSubmitting] = useState(false);
+	const [deleting, setDeleting] = useState(false);
 
 	const eachProduct = async () => {
-		const response = await axios.get(backendURL + '/product/list', {
-			headers: { token },
-		});
-		response.data.Products.map((item) => {
-			if (item._id === productId) {
-				setProduct(item);
-				setName(item.name);
-				setPrice(item.price);
-				setOffer(item.offer);
-				setBrand(item.brand);
-				setDescription(item.description);
-				setStock(item.stock);
-				setCategory(item.category);
-				return null;
-			}
-		});
+		try {
+			const response = await axios.get(backendURL + '/product/list', {
+				headers: { token },
+			});
+			response.data.Products.forEach((item) => {
+				if (item._id === productId) {
+					setProduct(item);
+					setName(item.name);
+					setPrice(item.price);
+					setOffer(item.offer);
+					setBrand(item.brand);
+					setDescription(item.description);
+					setStock(item.stock);
+					setCategory(item.category);
+				}
+			});
+		} catch (error) {
+			console.error(error.message);
+			toast.error('Failed to load product details');
+		}
 	};
 
 	useEffect(() => {
@@ -45,6 +52,7 @@ const UpdateProduct = ({ token }) => {
 
 	const onSubmitHandler = async (e) => {
 		e.preventDefault();
+		setSubmitting(true);
 		try {
 			const formData = new FormData();
 			formData.append('name', name);
@@ -54,7 +62,16 @@ const UpdateProduct = ({ token }) => {
 			formData.append('brand', brand);
 			formData.append('category', category);
 			formData.append('offer', offer);
-			imgOne && formData.append('imgOne', imgOne);
+
+			if (imgOne) {
+				// New image selected — send the file
+				formData.append('imgOne', imgOne);
+			} else {
+				// No new image picked — send back existing image URL(s)
+				// so the backend can keep it instead of wiping it out
+				formData.append('image', JSON.stringify(product.image || []));
+			}
+
 			const response = await axios.put(
 				backendURL + `/product/update/${productId}`,
 				formData,
@@ -64,17 +81,22 @@ const UpdateProduct = ({ token }) => {
 			);
 
 			if (response.data.result) {
+				toast.success(response.data.heed || 'Product updated successfully');
 				setImgOne(false);
-				console.log(response.data.heed);
+				navigate('/');
 			} else {
-				console.log(response.data.mistake);
+				toast.error(response.data.mistake || 'Failed to update product');
 			}
 		} catch (error) {
 			console.error(error.message);
+			toast.error('Something went wrong while updating product');
+		} finally {
+			setSubmitting(false);
 		}
 	};
 
 	const deleteHandler = async () => {
+		setDeleting(true);
 		try {
 			const response = await axios.delete(
 				backendURL + `/product/delete/${productId}`,
@@ -83,11 +105,16 @@ const UpdateProduct = ({ token }) => {
 				},
 			);
 			if (response.data.result) {
-				console.log(response.data.heed);
+				toast.success(response.data.heed || 'Product deleted successfully');
+			} else {
+				toast.error(response.data.mistake || 'Failed to delete product');
 			}
 			navigate('/');
 		} catch (error) {
 			console.error(error.message);
+			toast.error('Something went wrong while deleting product');
+		} finally {
+			setDeleting(false);
 		}
 	};
 
@@ -219,16 +246,21 @@ const UpdateProduct = ({ token }) => {
 					</div>
 
 					<div className='form-actions'>
-						<button className='btn btn-danger' onClick={deleteHandler} type='button'>
-							Delete
+						<button
+							className='btn btn-danger'
+							onClick={deleteHandler}
+							type='button'
+							disabled={deleting}
+						>
+							{deleting ? 'Deleting...' : 'Delete'}
 						</button>
 						<NavLink to='/'>
 							<button className='btn btn-outline' type='button'>
 								Cancel
 							</button>
 						</NavLink>
-						<button className='btn btn-primary' type='submit'>
-							Update
+						<button className='btn btn-primary' type='submit' disabled={submitting}>
+							{submitting ? 'Updating...' : 'Update'}
 						</button>
 					</div>
 				</form>

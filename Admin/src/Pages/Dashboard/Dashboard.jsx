@@ -38,28 +38,9 @@ const Dashboard = ({ token }) => {
 	const categoryData = Object.entries(categoryMap);
 	const maxCategoryCount = Math.max(1, ...categoryData.map(([, v]) => v));
 
-	// Stock status comes as a string from backend: "instock" | "lowstock" | "outofstock"
-	const inStock = products.filter((p) => p.stock === 'instock').length;
-	const lowStock = products.filter((p) => p.stock === 'lowstock').length;
-	const outOfStock = products.filter((p) => p.stock === 'outofstock').length;
-
-	const donutData = [
-		{ label: 'In stock', value: inStock, color: '#1e8e3e' },
-		{ label: 'Low stock', value: lowStock, color: '#b26a00' },
-		{ label: 'Out of stock', value: outOfStock, color: '#d50000' },
-	];
-	const donutTotal = Math.max(
-		1,
-		donutData.reduce((s, d) => s + d.value, 0),
-	);
-
-	let cumulative = 0;
-	const donutSegments = donutData.map((d) => {
-		const start = (cumulative / donutTotal) * 100;
-		cumulative += d.value;
-		const end = (cumulative / donutTotal) * 100;
-		return { ...d, start, end };
-	});
+	// Stock status comes as a string from backend: "Stock" | "No Stock"
+	const inStock = products.filter((p) => p.stock === 'Stock').length;
+	const outOfStock = products.filter((p) => p.stock === 'No Stock').length;
 
 	return (
 		<main className='dashboard'>
@@ -85,7 +66,7 @@ const Dashboard = ({ token }) => {
 			</div>
 
 			<div className='chart-grid'>
-				<div className='chart-card'>
+				<div className='chart-card chart-card-full'>
 					<h2>Products by Category</h2>
 					<div className='bar-chart'>
 						{categoryData.length === 0 && <p className='chart-empty'>No data yet</p>}
@@ -101,49 +82,6 @@ const Dashboard = ({ token }) => {
 								<span className='bar-count'>{count}</span>
 							</div>
 						))}
-					</div>
-				</div>
-
-				<div className='chart-card'>
-					<h2>Stock Status</h2>
-					<div className='donut-wrap'>
-						<svg viewBox='0 0 42 42' className='donut-chart'>
-							<circle
-								className='donut-ring'
-								cx='21'
-								cy='21'
-								r='15.9'
-								fill='transparent'
-							></circle>
-							{donutSegments.map((seg) => (
-								<circle
-									key={seg.label}
-									cx='21'
-									cy='21'
-									r='15.9'
-									fill='transparent'
-									stroke={seg.color}
-									strokeWidth='5'
-									strokeDasharray={`${seg.end - seg.start} ${
-										100 - (seg.end - seg.start)
-									}`}
-									strokeDashoffset={25 - seg.start}
-									transform='rotate(-90 21 21)'
-								></circle>
-							))}
-						</svg>
-						<div className='donut-legend'>
-							{donutData.map((d) => (
-								<div className='legend-item' key={d.label}>
-									<span
-										className='legend-dot'
-										style={{ backgroundColor: d.color }}
-									></span>
-									<span>{d.label}</span>
-									<span className='legend-value'>{d.value}</span>
-								</div>
-							))}
-						</div>
 					</div>
 				</div>
 			</div>

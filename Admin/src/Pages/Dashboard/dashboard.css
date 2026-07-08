@@ -44,7 +44,7 @@
 
 .chart-grid {
 	display: grid;
-	grid-template-columns: 1.4fr 1fr;
+	grid-template-columns: 1fr;
 	gap: 1.5rem;
 }
 
@@ -55,6 +55,9 @@
 	padding: 1.5rem;
 }
 
+.chart-card-full {
+	width: 100%;
+}
 .chart-card h2 {
 	font-size: 1rem;
 	margin-bottom: 1.25rem;
